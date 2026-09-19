@@ -2,327 +2,408 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Prime Wave Technology | Social media that keeps up with people</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Prime Wave Technology | Social media that respects your attention</title>
 <meta name="description" content="Prime Wave Technology builds the feed, the studio and the analytics that help communities grow without the noise.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;700&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+<script>document.documentElement.classList.add('js');</script>
 <style>
   :root {
-    --mercury: #E6EBF1;
-    --fog: #F5F7FA;
-    --steel: #9AA4B2;
-    --gunmetal: #262C36;
-    --horizon: #5B8DEF;
-    --ember: #FF9A5A;
-    --display: "Unbounded", "Arial Black", sans-serif;
-    --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
-    --chrome-text: linear-gradient(180deg, #4b5566 0%, #1f2530 34%, #8a95a6 52%, #2b323e 70%, #6d7889 100%);
-    --chrome-fill: linear-gradient(180deg, #ffffff 0%, #cfd6e0 22%, #6f7b8c 48%, #e9edf3 52%, #a3adbb 78%, #f4f6f9 100%);
+    --black: #000000;
+    --blue: #4F7BFF;
+    --violet: #8B5CFF;
+    --ice: #EAF0FF;
+    --muted: #A3ACCB;
+    --glass: rgba(255, 255, 255, 0.045);
+    --glass-edge: rgba(160, 175, 255, 0.20);
+    --display: "Unbounded", "Arial Black", system-ui, sans-serif;
+    --body: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --ease: cubic-bezier(.2, .7, .2, 1);
+    --pad: 22px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
   body {
-    font-family: var(--body);
-    color: var(--gunmetal);
-    background: var(--mercury);
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+    background: var(--black); color: var(--ice);
+    font-family: var(--body); line-height: 1.65;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
   }
   a { color: inherit; }
-  :focus-visible { outline: 3px solid var(--horizon); outline-offset: 3px; border-radius: 6px; }
+  :focus-visible { outline: 2px solid #B9A4FF; outline-offset: 3px; border-radius: 8px; }
+
+  /* ---------- Background: glow + animated wave grid ---------- */
+  .glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(60% 40% at 15% 8%, rgba(79,123,255,.22), transparent 70%),
+      radial-gradient(55% 40% at 90% 30%, rgba(139,92,255,.20), transparent 70%);
+  }
+  #bg {
+    position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 30%, #000 68%);
+            mask-image: linear-gradient(to bottom, transparent 30%, #000 68%);
+  }
+  main, header.hero, footer, .nav { position: relative; z-index: 2; }
 
   /* ---------- Nav ---------- */
   .nav {
-    position: absolute; inset: 0 0 auto 0; z-index: 5;
+    position: fixed; z-index: 10; top: 12px; left: 12px; right: 12px;
     display: flex; align-items: center; justify-content: space-between;
-    padding: 22px clamp(20px, 5vw, 64px);
+    padding: 10px 10px 10px 18px; border-radius: 999px;
+    background: rgba(8, 8, 14, .55); border: 1px solid var(--glass-edge);
+    -webkit-backdrop-filter: blur(18px) saturate(140%); backdrop-filter: blur(18px) saturate(140%);
   }
-  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: 0.01em; }
-  .brand svg { width: 36px; height: 36px; flex: none; }
-  .nav ul { display: flex; gap: clamp(16px, 3vw, 36px); list-style: none; }
-  .nav a.link { text-decoration: none; font-weight: 500; font-size: 15px; padding: 6px 2px; border-bottom: 2px solid transparent; }
-  .nav a.link:hover { border-bottom-color: var(--gunmetal); }
+  .brand { font-family: var(--display); font-weight: 600; font-size: 13px; text-decoration: none; letter-spacing: .01em; }
+  .nav-links { display: none; list-style: none; gap: 28px; }
+  .nav-links a { text-decoration: none; font-size: 14px; font-weight: 500; color: var(--muted); }
+  .nav-links a:hover { color: #fff; }
+
+  .btn {
+    position: relative; display: inline-flex; align-items: center; justify-content: center;
+    font: 600 15px/1 var(--body); color: #fff; text-decoration: none; cursor: pointer; border: 0;
+    padding: 14px 24px; border-radius: 999px;
+    background: linear-gradient(110deg, #3E63FF, #7A4DFF);
+    box-shadow: 0 0 0 1px rgba(255,255,255,.14) inset, 0 0 24px rgba(91,110,255,.55), 0 0 60px rgba(139,92,255,.30);
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgba(255,255,255,.22) inset, 0 0 32px rgba(91,110,255,.75), 0 0 80px rgba(139,92,255,.45); }
+  .btn:active { transform: translateY(0); }
+  .btn.small { padding: 11px 18px; font-size: 14px; }
+  .btn.ghost { background: transparent; box-shadow: 0 0 0 1px var(--glass-edge) inset; color: var(--ice); }
+  .btn.ghost:hover { box-shadow: 0 0 0 1px rgba(190,180,255,.6) inset, 0 0 30px rgba(139,92,255,.30); }
+  .btn[disabled] { opacity: .6; cursor: progress; transform: none; }
 
   /* ---------- Hero ---------- */
   .hero {
-    position: relative; min-height: 100vh; min-height: 100svh;
-    display: flex; flex-direction: column; justify-content: flex-start;
-    padding: clamp(120px, 20vh, 190px) clamp(20px, 5vw, 64px) 0;
-    background:
-      radial-gradient(120% 70% at 78% 8%, rgba(255,154,90,.30) 0%, rgba(255,154,90,0) 46%),
-      linear-gradient(180deg, #C8D6EA 0%, #E8EDF4 58%, #F5F7FA 100%);
-    overflow: hidden;
+    min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 110px var(--pad) 72px; overflow: hidden;
   }
-  .hero-copy { position: relative; z-index: 3; max-width: 760px; }
-  h1 {
+  .title-wrap { transform: translateY(calc(var(--p, 0) * -70px)); opacity: calc(1 - var(--p, 0) * .95); will-change: transform, opacity; }
+  .title {
     font-family: var(--display); font-weight: 700;
-    font-size: clamp(34px, 6.2vw, 78px); line-height: 1.06; letter-spacing: -0.02em;
-    background: var(--chrome-text); -webkit-background-clip: text; background-clip: text; color: transparent;
-    padding-bottom: .08em;
+    font-size: clamp(3rem, 22.5vw, 15rem); line-height: .92; letter-spacing: -.035em;
+    background: linear-gradient(100deg, #FFFFFF 0%, #8FB0FF 22%, #A27BFF 48%, #5B85FF 74%, #FFFFFF 100%);
+    background-size: 220% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 26px rgba(79,123,255,.55)) drop-shadow(0 0 90px rgba(139,92,255,.40));
+    animation: sheen 9s ease-in-out infinite alternate;
+    padding-bottom: .06em;
   }
-  .lede { margin-top: 22px; max-width: 520px; font-size: clamp(17px, 1.6vw, 20px); color: #384152; }
-  .cta-row { margin-top: 32px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+  .title span { display: block; }
+  @keyframes sheen { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+  .lede { margin-top: 34px; max-width: 30ch; font-size: clamp(17px, 4.6vw, 22px); color: var(--muted); }
+  .cta-row { margin-top: 36px; display: flex; flex-wrap: wrap; gap: 14px; }
 
-  .btn {
-    position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center;
-    font: 600 16px/1 var(--body); text-decoration: none; cursor: pointer;
-    padding: 16px 26px; border-radius: 999px; border: 1px solid #6c7788; color: var(--gunmetal);
-    background: var(--chrome-fill);
-    box-shadow: inset 0 1px 0 #fff, inset 0 -3px 6px rgba(38,44,54,.18), 0 6px 18px rgba(38,44,54,.18);
-    transition: transform .15s ease, box-shadow .15s ease;
-  }
-  .btn::after {
-    content: ""; position: absolute; top: 0; bottom: 0; width: 45%; left: -60%;
-    background: linear-gradient(100deg, transparent, rgba(255,255,255,.85), transparent);
-    transform: skewX(-18deg);
-  }
-  .btn:hover::after { left: 130%; transition: left .7s ease; }
-  .btn:active { transform: translateY(1px); }
-  .btn.ghost { background: transparent; box-shadow: none; border-color: var(--gunmetal); }
-  .btn.ghost:hover { background: rgba(38,44,54,.08); }
+  /* ---------- Sections ---------- */
+  section { padding: clamp(96px, 26vw, 200px) var(--pad); }
+  .wrap { max-width: 1120px; margin: 0 auto; }
 
-  .wave-wrap { position: absolute; left: 0; right: 0; bottom: -2px; height: 46%; z-index: 2; pointer-events: none; }
-  .wave-wrap svg { width: 100%; height: 100%; display: block; }
+  .statement p {
+    font-family: var(--display); font-weight: 600; letter-spacing: -.02em; line-height: 1.25;
+    font-size: clamp(1.6rem, 6.6vw, 3.4rem); max-width: 22ch;
+  }
+  .js .statement .w { opacity: .16; transition: opacity .25s linear; }
 
-  /* ---------- Products ---------- */
-  section { padding: clamp(64px, 10vw, 128px) clamp(20px, 5vw, 64px); }
-  .products { background: var(--fog); }
-  .section-head { max-width: 640px; margin-bottom: clamp(32px, 5vw, 64px); }
-  h2 { font-family: var(--display); font-weight: 600; font-size: clamp(26px, 3.6vw, 44px); line-height: 1.15; letter-spacing: -0.015em; }
-  .section-head p { margin-top: 16px; font-size: 18px; color: #465063; max-width: 520px; }
+  h2 { font-family: var(--display); font-weight: 600; letter-spacing: -.02em; line-height: 1.15; font-size: clamp(1.7rem, 6.4vw, 3rem); }
+  .products h2 { max-width: 16ch; }
+  .section-sub { margin-top: 18px; color: var(--muted); font-size: 18px; max-width: 34ch; }
 
-  .product-list { list-style: none; max-width: 1100px; }
-  .product {
-    display: grid; grid-template-columns: minmax(180px, 1fr) 1.4fr; gap: 12px clamp(24px, 6vw, 96px);
-    align-items: baseline; padding: 34px 0; position: relative;
+  .cards { margin-top: clamp(44px, 9vw, 80px); display: grid; gap: 18px; }
+  .card {
+    --mx: 50%; --my: 0%;
+    position: relative; overflow: hidden; isolation: isolate;
+    padding: 30px 26px 34px; border-radius: 28px;
+    background: var(--glass); border: 1px solid var(--glass-edge);
+    -webkit-backdrop-filter: blur(22px) saturate(150%); backdrop-filter: blur(22px) saturate(150%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.10) inset, 0 30px 80px rgba(0,0,0,.6);
+    transition: border-color .3s var(--ease), transform .4s var(--ease);
   }
-  .product::before {
-    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 3px; border-radius: 3px;
-    background: linear-gradient(90deg, #ffffff, #9aa4b2 20%, #e9edf3 45%, #6f7b8c 70%, #f4f6f9);
+  .card::before {
+    content: ""; position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(360px circle at var(--mx) var(--my), rgba(120,140,255,.22), transparent 65%);
+    opacity: .9;
   }
-  .product h3 {
-    font-family: var(--display); font-weight: 700; font-size: clamp(26px, 3.4vw, 42px); letter-spacing: -0.02em; line-height: 1.1;
-    background: var(--chrome-text); -webkit-background-clip: text; background-clip: text; color: transparent; padding-bottom: .08em;
+  .card:hover { border-color: rgba(180,170,255,.5); }
+  .orb {
+    width: 46px; height: 46px; border-radius: 50%; margin-bottom: 44px;
+    background: radial-gradient(circle at 35% 30%, #fff 0%, #8FB0FF 25%, #7A4DFF 70%, #2a1b6b 100%);
+    box-shadow: 0 0 28px rgba(110,120,255,.7), 0 0 70px rgba(139,92,255,.4);
   }
-  .product p { font-size: 18px; color: #384152; max-width: 520px; }
-  .product .what { font-weight: 600; color: var(--gunmetal); display: block; margin-bottom: 4px; }
-
-  /* ---------- Belief band ---------- */
-  .belief {
-    background: linear-gradient(180deg, #f6f8fb 0%, #b9c2cf 38%, #7d8899 50%, #dfe5ec 52%, #a9b3c1 80%, #eef1f5 100%);
-    text-align: left;
-  }
-  .belief-inner { max-width: 980px; }
-  .belief h2 { font-size: clamp(28px, 4.6vw, 58px); color: #1c212a; }
-  .belief p { margin-top: 20px; max-width: 560px; font-size: 19px; color: #20262f; }
+  .card h3 { font-family: var(--display); font-weight: 600; font-size: 1.5rem; letter-spacing: -.02em; line-height: 1.15; }
+  .card .what { margin-top: 14px; color: #D4DBF5; font-weight: 600; }
+  .card p.desc { margin-top: 8px; color: var(--muted); }
 
   /* ---------- Waitlist ---------- */
-  .join { background: var(--gunmetal); color: #EEF1F5; }
-  .join-inner { max-width: 720px; }
-  .join h2 { color: #fff; }
-  .join p.sub { margin-top: 14px; color: #B9C2CF; font-size: 18px; max-width: 480px; }
-  .join-row { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
-  .join input {
-    flex: 1 1 260px; min-width: 0; font: 500 16px var(--body); color: #fff;
-    padding: 16px 20px; border-radius: 999px; border: 1px solid #5a6577; background: #313949;
+  .join .panel {
+    position: relative; overflow: hidden; isolation: isolate;
+    padding: clamp(32px, 8vw, 72px) clamp(24px, 6vw, 72px); border-radius: 34px;
+    background: var(--glass); border: 1px solid var(--glass-edge);
+    -webkit-backdrop-filter: blur(24px) saturate(150%); backdrop-filter: blur(24px) saturate(150%);
+    box-shadow: 0 1px 0 rgba(255,255,255,.12) inset, 0 40px 120px rgba(60,50,180,.28);
   }
-  .join input::placeholder { color: #9aa5b6; }
-  .join input:focus-visible { outline-color: var(--ember); }
-  .status { margin-top: 16px; min-height: 1.6em; font-weight: 500; }
-  .status.ok { color: #BFE3C4; }
-  .status.err { color: #FFC2A0; }
+  .join .panel::before {
+    content: ""; position: absolute; z-index: -1; width: 520px; height: 520px; right: -200px; top: -240px;
+    background: radial-gradient(circle, rgba(139,92,255,.5), transparent 65%); filter: blur(20px);
+  }
+  .join .section-sub { max-width: 36ch; }
+  .join-row { margin-top: 32px; display: grid; gap: 12px; max-width: 560px; }
+  .join input {
+    width: 100%; font: 500 16px var(--body); color: #fff;
+    padding: 17px 22px; border-radius: 999px; border: 1px solid var(--glass-edge);
+    background: rgba(0,0,0,.55);
+  }
+  .join input::placeholder { color: #7f88aa; }
+  .join input:focus-visible { outline-offset: 2px; }
+  .status { margin-top: 16px; min-height: 1.7em; font-weight: 500; }
+  .status.ok { color: #A6F0C6; }
+  .status.err { color: #FFB4A2; }
 
-  footer { background: var(--gunmetal); color: #9aa5b6; padding: 28px clamp(20px, 5vw, 64px) 40px; border-top: 1px solid #3a4352; font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+  footer {
+    padding: 36px var(--pad) calc(44px + env(safe-area-inset-bottom));
+    display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px;
+    color: #7f88aa; font-size: 14px; border-top: 1px solid rgba(160,175,255,.12);
+  }
   footer a { text-decoration: none; }
   footer a:hover { color: #fff; }
 
-  @media (max-width: 720px) {
-    .product { grid-template-columns: 1fr; padding: 28px 0; }
-    .nav ul { display: none; }
-    .wave-wrap { height: 38%; }
+  /* ---------- Scroll reveal ---------- */
+  .js .reveal { opacity: 0; transform: translateY(34px); transition: opacity 1s var(--ease), transform 1s var(--ease); transition-delay: var(--d, 0s); }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- Larger screens ---------- */
+  @media (min-width: 760px) {
+    :root { --pad: clamp(32px, 6vw, 80px); }
+    .nav { top: 16px; left: 50%; right: auto; width: min(760px, calc(100% - 48px)); transform: translateX(-50%); padding-left: 24px; }
+    .nav-links { display: flex; }
+    .hero { padding-top: 140px; }
+    .cards { grid-template-columns: repeat(6, 1fr); gap: 22px; }
+    .card { grid-column: span 2; padding: 36px 32px 40px; }
+    .card.wide { grid-column: span 4; }
+    .join-row { grid-template-columns: 1fr auto; }
   }
+  @media (hover: none) { .card::before { background: radial-gradient(360px circle at 50% 0%, rgba(120,140,255,.18), transparent 65%); } }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    .btn::after { transition: none; }
+    .title { animation: none; }
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+    .js .statement .w { opacity: 1; transition: none; }
+    .title-wrap { transform: none; opacity: 1; }
   }
 </style>
 </head>
 <body>
 
-<header class="hero" id="top">
-  <nav class="nav" aria-label="Main">
-    <a class="brand" href="#top" aria-label="Prime Wave Technology home">
-      <svg viewBox="0 0 40 40" aria-hidden="true">
-        <defs>
-          <linearGradient id="mark" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0" stop-color="#fff"/><stop offset=".3" stop-color="#c9d1dc"/>
-            <stop offset=".5" stop-color="#5f6b7d"/><stop offset=".54" stop-color="#e8edf3"/>
-            <stop offset="1" stop-color="#8f9bad"/>
-          </linearGradient>
-        </defs>
-        <circle cx="20" cy="20" r="18.5" fill="url(#mark)" stroke="#5f6b7d" stroke-width="1.2"/>
-        <path d="M6 23c4-7 8-7 11-2s7 5 10-1c2-3 4-4 7-3" fill="none" stroke="#262C36" stroke-width="2.6" stroke-linecap="round"/>
-      </svg>
-      Prime Wave Technology
-    </a>
-    <ul>
-      <li><a class="link" href="#products">Products</a></li>
-      <li><a class="link" href="#belief">Company</a></li>
-      <li><a class="link" href="#join">Join the waitlist</a></li>
-    </ul>
-  </nav>
+<div class="glow" aria-hidden="true"></div>
+<canvas id="bg" aria-hidden="true"></canvas>
 
-  <div class="hero-copy">
-    <h1>Social media that keeps up with the people using it.</h1>
-    <p class="lede">Prime Wave Technology builds the feed, the studio and the analytics that help communities grow without the noise.</p>
+<nav class="nav" aria-label="Main">
+  <a class="brand" href="#top">Prime Wave</a>
+  <ul class="nav-links">
+    <li><a href="#products">Products</a></li>
+    <li><a href="#about">Company</a></li>
+  </ul>
+  <a class="btn small" href="#join">Join the waitlist</a>
+</nav>
+
+<header class="hero" id="top">
+  <div class="title-wrap" id="titleWrap">
+    <h1 class="title" aria-label="Prime Wave"><span>PRIME</span><span>WAVE</span></h1>
+    <p class="lede">Social media that keeps up with the people using it.</p>
     <div class="cta-row">
       <a class="btn" href="#join">Join the waitlist</a>
       <a class="btn ghost" href="#products">See what we build</a>
     </div>
   </div>
-
-  <div class="wave-wrap" aria-hidden="true">
-    <svg id="waves" viewBox="0 0 1440 420" preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="chromeA" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff"/>
-          <stop offset=".16" stop-color="#d5dce6"/>
-          <stop offset=".38" stop-color="#7e8a9c"/>
-          <stop offset=".47" stop-color="#3f4858"/>
-          <stop offset=".5" stop-color="#ffd2b0"/>
-          <stop offset=".62" stop-color="#eef1f6"/>
-          <stop offset=".85" stop-color="#9aa6b6"/>
-          <stop offset="1" stop-color="#dfe5ed"/>
-        </linearGradient>
-        <linearGradient id="chromeB" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f3f6fa"/>
-          <stop offset=".22" stop-color="#aab4c2"/>
-          <stop offset=".42" stop-color="#566072"/>
-          <stop offset=".5" stop-color="#9dbdf5"/>
-          <stop offset=".66" stop-color="#e2e8f0"/>
-          <stop offset="1" stop-color="#7d899a"/>
-        </linearGradient>
-        <linearGradient id="chromeC" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#cfd7e2"/>
-          <stop offset=".3" stop-color="#6b7688"/>
-          <stop offset=".45" stop-color="#2d3440"/>
-          <stop offset=".6" stop-color="#8fa9d6"/>
-          <stop offset="1" stop-color="#3a4250"/>
-        </linearGradient>
-      </defs>
-      <path id="w3" fill="url(#chromeC)"/>
-      <path id="w2" fill="url(#chromeB)"/>
-      <path id="w1" fill="url(#chromeA)"/>
-      <path id="h1" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" opacity=".9"/>
-    </svg>
-  </div>
 </header>
 
 <main>
-  <section class="products" id="products">
-    <div class="section-head">
-      <h2>Three tools, one shared audience.</h2>
-      <p>Each product works on its own. Together they take you from a post idea to knowing exactly how it landed.</p>
+  <section class="statement" id="about">
+    <div class="wrap">
+      <p id="statement">We build social tools that respect your attention and help communities grow, without the noise.</p>
     </div>
-    <ul class="product-list">
-      <li class="product">
-        <h3>Wavefeed</h3>
-        <p><span class="what">The feed you control.</span>Follow people in the order they post, then tune what you see with simple filters instead of a hidden ranking.</p>
-      </li>
-      <li class="product">
-        <h3>Crest Studio</h3>
-        <p><span class="what">Create and publish in one place.</span>Draft, schedule and post to every channel you use, with a shared calendar for your team.</p>
-      </li>
-      <li class="product">
-        <h3>Tide Insights</h3>
-        <p><span class="what">Know what worked.</span>See which posts landed, when your audience is online, and what to make next.</p>
-      </li>
-    </ul>
   </section>
 
-  <section class="belief" id="belief">
-    <div class="belief-inner">
-      <h2>Built to help people connect, not to keep them scrolling.</h2>
-      <p>We measure success by the conversations our users have and the communities they build. Time spent staring at a screen is not the goal.</p>
+  <section class="products" id="products">
+    <div class="wrap">
+      <h2 class="reveal">Three tools. One shared audience.</h2>
+      <p class="section-sub reveal" style="--d:.08s">Each product works on its own. Together they take you from an idea to knowing how it landed.</p>
+      <div class="cards">
+        <article class="card wide reveal">
+          <div class="orb" aria-hidden="true"></div>
+          <h3>Wavefeed</h3>
+          <p class="what">The feed you control.</p>
+          <p class="desc">Follow people in the order they post, then tune what you see with simple filters instead of a hidden ranking.</p>
+        </article>
+        <article class="card reveal" style="--d:.1s">
+          <div class="orb" aria-hidden="true"></div>
+          <h3>Crest Studio</h3>
+          <p class="what">Create and publish in one place.</p>
+          <p class="desc">Draft, schedule and post to every channel you use, with a shared calendar for your team.</p>
+        </article>
+        <article class="card reveal">
+          <div class="orb" aria-hidden="true"></div>
+          <h3>Tide Insights</h3>
+          <p class="what">Know what worked.</p>
+          <p class="desc">See which posts landed, when your audience is online, and what to make next.</p>
+        </article>
+      </div>
     </div>
   </section>
 
   <section class="join" id="join">
-    <div class="join-inner">
-      <h2>Be first on the wave.</h2>
-      <p class="sub">Leave your email and we will tell you when Wavefeed opens.</p>
-      <div class="join-row">
-        <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
-        <button class="btn" id="joinBtn" type="button">Join the waitlist</button>
+    <div class="wrap">
+      <div class="panel reveal">
+        <h2>Be first on the wave.</h2>
+        <p class="section-sub">Leave your email and we will tell you when Wavefeed opens.</p>
+        <div class="join-row">
+          <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" aria-label="Email address">
+          <button class="btn" id="joinBtn" type="button">Join the waitlist</button>
+        </div>
+        <p class="status" id="status" role="status" aria-live="polite"></p>
       </div>
-      <p class="status" id="status" role="status" aria-live="polite"></p>
     </div>
   </section>
 </main>
 
 <footer>
   <span>&copy; 2026 Prime Wave Technology</span>
-  <span><a href="#top">Back to top</a></span>
+  <a href="#top">Back to top</a>
 </footer>
 
 <script>
-  // ---- Chrome wave: layered sine bands, animated once the page loads ----
-  (function () {
-    var W = 1440, H = 420, STEP = 12;
-    var p1 = document.getElementById('w1'), p2 = document.getElementById('w2'),
-        p3 = document.getElementById('w3'), hl = document.getElementById('h1');
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function y(x, t, base, amp, freq, phase) {
-      return base
-        + amp * Math.sin(x * freq + phase + t)
-        + amp * 0.45 * Math.sin(x * freq * 2.1 - t * 1.4 + phase)
-        + amp * 0.2 * Math.sin(x * freq * 4.3 + t * 0.7);
-    }
-    function band(t, base, amp, freq, phase) {
-      var d = 'M0 ' + H, top = [], x;
-      for (x = 0; x <= W; x += STEP) top.push([x, y(x, t, base, amp, freq, phase)]);
-      d = 'M0 ' + H + ' L' + top.map(function (p) { return p[0] + ' ' + p[1].toFixed(1); }).join(' L') + ' L' + W + ' ' + H + ' Z';
-      return { d: d, top: top };
-    }
-    function draw(t) {
-      p3.setAttribute('d', band(t * 0.8, 110, 34, 0.0052, 2.0).d);
-      p2.setAttribute('d', band(t * 1.0, 170, 40, 0.0046, 0.6).d);
-      var b = band(t * 1.2, 250, 46, 0.0040, 4.1);
-      p1.setAttribute('d', b.d);
-      hl.setAttribute('d', 'M' + b.top.map(function (p) { return p[0] + ' ' + (p[1] + 2).toFixed(1); }).join(' L'));
-    }
+  /* ---------- Animated wave grid (canvas) ---------- */
+  var c = document.getElementById('bg'), ctx = c.getContext('2d');
+  var w, h, dpr, grad;
+  var ROWS = 20, COLS = 46;
 
-    draw(0);
-    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size() {
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    w = window.innerWidth; h = window.innerHeight;
+    c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, '#4F7BFF'); grad.addColorStop(0.55, '#8B5CFF'); grad.addColorStop(1, '#4F7BFF');
+  }
+
+  function draw(t) {
+    ctx.clearRect(0, 0, w, h);
+    var horizon = h * 0.5, span = h - horizon, pts = [], r, i;
+    for (r = 0; r <= ROWS; r++) {
+      var p = r / ROWS, depth = Math.pow(p, 2.1), row = [];
+      var y0 = horizon + depth * span * 1.08;
+      for (i = 0; i <= COLS; i++) {
+        var u = i / COLS - 0.5;
+        var x = w / 2 + u * w * (0.3 + depth * 2.3);
+        var wave = Math.sin(u * 7 + t * 0.9 + p * 5) * (5 + depth * 40)
+                 + Math.sin(u * 13 - t * 0.6 + p * 3) * (2 + depth * 14);
+        row.push([x, y0 - wave]);
+      }
+      pts.push(row);
+    }
+    ctx.strokeStyle = grad; ctx.lineWidth = 1;
+    // horizontal wave lines
+    for (r = 0; r <= ROWS; r++) {
+      var d = Math.pow(r / ROWS, 2.1);
+      ctx.globalAlpha = 0.10 + d * 0.5;
+      ctx.beginPath();
+      for (i = 0; i <= COLS; i++) { i ? ctx.lineTo(pts[r][i][0], pts[r][i][1]) : ctx.moveTo(pts[r][i][0], pts[r][i][1]); }
+      ctx.stroke();
+    }
+    // depth lines connecting the rows into a grid
+    ctx.globalAlpha = 0.16;
+    for (i = 0; i <= COLS; i += 2) {
+      ctx.beginPath();
+      for (r = 0; r <= ROWS; r++) { r ? ctx.lineTo(pts[r][i][0], pts[r][i][1]) : ctx.moveTo(pts[r][i][0], pts[r][i][1]); }
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  size();
+  window.addEventListener('resize', function () { size(); if (reduce) draw(2); });
+  if (reduce) { draw(2); }
+  else {
+    var t0 = null;
+    (function loop(ts) {
+      if (t0 === null) t0 = ts;
+      if (!document.hidden) draw((ts - t0) / 1000 * 0.6);
+      requestAnimationFrame(loop);
+    })(0);
+  }
+
+  /* ---------- Statement: words light up as you scroll ---------- */
+  var stmt = document.getElementById('statement');
+  var words = stmt.textContent.trim().split(/\s+/);
+  stmt.setAttribute('aria-label', words.join(' '));
+  stmt.innerHTML = words.map(function (wd) { return '<span class="w" aria-hidden="true">' + wd + '</span>'; }).join(' ');
+  var spans = stmt.querySelectorAll('.w');
+
+  /* ---------- Scroll-linked updates ---------- */
+  var titleWrap = document.getElementById('titleWrap'), ticking = false;
+  function onScroll() {
     if (reduce) return;
-    var start = null;
-    function frame(ts) {
-      if (start === null) start = ts;
-      draw((ts - start) / 1000 * 0.55);
-      requestAnimationFrame(frame);
+    var vh = window.innerHeight;
+    titleWrap.style.setProperty('--p', Math.min(Math.max(window.scrollY / (vh * 0.9), 0), 1).toFixed(3));
+    var r = stmt.getBoundingClientRect();
+    var prog = Math.min(Math.max((vh * 0.85 - r.top) / (r.height + vh * 0.25), 0), 1);
+    var lit = prog * spans.length;
+    for (var i = 0; i < spans.length; i++) {
+      spans[i].style.opacity = (0.16 + 0.84 * Math.min(Math.max(lit - i, 0), 1)).toFixed(2);
     }
-    requestAnimationFrame(frame);
-  })();
+    ticking = false;
+  }
+  window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
 
-  // ---- Waitlist ----
-  (function () {
-    var input = document.getElementById('email'),
-        btn = document.getElementById('joinBtn'),
-        status = document.getElementById('status');
-    function submit() {
-      var v = input.value.trim();
-      var ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-      status.className = 'status ' + (ok ? 'ok' : 'err');
-      status.textContent = ok
-        ? 'You are on the list. We will email ' + v + ' when Wavefeed opens.'
-        : 'Enter a valid email address, like name@example.com.';
-      if (ok) input.value = '';
-    }
-    btn.addEventListener('click', submit);
-    input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
-  })();
+  /* ---------- Reveal on scroll ---------- */
+  var items = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window && !reduce) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.15, rootMargin: '0px 0px -6% 0px' });
+    items.forEach(function (el) { io.observe(el); });
+  } else { items.forEach(function (el) { el.classList.add('in'); }); }
+
+  /* ---------- Card glow follows the pointer ---------- */
+  document.querySelectorAll('.card').forEach(function (card) {
+    card.addEventListener('pointermove', function (e) {
+      var b = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - b.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - b.top) + 'px');
+    });
+  });
+
+  /* ---------- Waitlist ---------- */
+  // Signups are sent to your Formspree form
+  var FORM_ENDPOINT = 'https://formspree.io/f/mwlpvpny';
+
+  var input = document.getElementById('email'), btn = document.getElementById('joinBtn'), status = document.getElementById('status');
+  function show(msg, ok) { status.className = 'status ' + (ok ? 'ok' : 'err'); status.textContent = msg; }
+  function submit() {
+    var v = input.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) { show('Enter a valid email address, like name@example.com.', false); return; }
+    if (!FORM_ENDPOINT) { show('You are on the list. We will email ' + v + ' when Wavefeed opens.', true); input.value = ''; return; }
+    btn.disabled = true; show('Sending...', true);
+    fetch(FORM_ENDPOINT, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ email: v })
+    }).then(function (r) {
+      if (!r.ok) throw new Error('bad');
+      show('You are on the list. We will email ' + v + ' when Wavefeed opens.', true); input.value = '';
+    }).catch(function () {
+      show('Could not join the list. Check your connection and try again.', false);
+    }).then(function () { btn.disabled = false; });
+  }
+  btn.addEventListener('click', submit);
+  input.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+})();
 </script>
 </body>
 </html>
